@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #1b191d;
+  --text: #f3ecf8;
+  --accent: #9427e8;
+  --border: #3b3d40;
+  --block-bg: #1e1e23;
+  --starring: #ffca28;
+  --inputfill: #211f29;
+  --download: #42782f;
+}
+
+body {
+  color: var(--text);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
