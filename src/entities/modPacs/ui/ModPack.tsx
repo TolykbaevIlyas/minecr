@@ -1,12 +1,13 @@
 "use client";
 import { useModsStore } from "@/shared/store/modsStore";
-import Link from "next/link";
+// import Link from "next/link";
 import React from "react";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
-const ModPack = ({ packId }) => {
+const ModPack = ({ packId }: {packId: number}) => {
   const router = useRouter();
 
   const pack = useModsStore((state) =>
@@ -29,29 +30,32 @@ const ModPack = ({ packId }) => {
     ","
   );
 
-  const handleDownloadZip = async (e) => {
-    e.preventDefault(); // чтобы не сработал переход по <Link>
-    if (!mods.length) return;
+  const handleDownloadZip = async (e: React.MouseEvent<HTMLImageElement>) => {
+  e.preventDefault(); // чтобы не сработал переход по <Link>
+  e.stopPropagation(); // чтобы не сработал родительский onClick (если нужно)
 
-    const zip = new JSZip();
-    const folder = zip.folder("mods");
+  if (!mods.length) return;
 
-    await Promise.all(
-      mods.map(async (mod) => {
-        try {
-          const response = await fetch(mod.downloadUrl);
-          const blob = await response.blob();
-          const filename = mod.downloadUrl.split("/").pop();
-          folder?.file(filename || `${mod.name}.jar`, blob);
-        } catch (error) {
-          console.error(`Ошибка при скачивании мода ${mod.name}`, error);
-        }
-      })
-    );
+  const zip = new JSZip();
+  const folder = zip.folder("mods");
 
-    const zipBlob = await zip.generateAsync({ type: "blob" });
-    saveAs(zipBlob, `${pack.name.replace(/\s+/g, "_")}_mods.zip`);
-  };
+  await Promise.all(
+    mods.map(async (mod) => {
+      try {
+        const response = await fetch(mod.downloadUrl);
+        const blob = await response.blob();
+        const filename = mod.downloadUrl.split("/").pop();
+        folder?.file(filename || `${mod.name}.jar`, blob);
+      } catch (error) {
+        console.error(`Ошибка при скачивании мода ${mod.name}`, error);
+      }
+    })
+  );
+
+  const zipBlob = await zip.generateAsync({ type: "blob" });
+  saveAs(zipBlob, `${pack.name.replace(/\s+/g, "_")}_mods.zip`);
+};
+
 
   return (
     <div
@@ -60,7 +64,9 @@ const ModPack = ({ packId }) => {
     >
       <div className="flex gap-[180px]">
         <div className="flex gap-[10px]">
-          <img
+          <Image
+            width={100}
+            height={100}
             src={pack.imageUrl}
             alt={pack.name}
             className="w-[100px] h-[100px] object-cover rounded-[10px]"
@@ -71,12 +77,16 @@ const ModPack = ({ packId }) => {
           </div>
         </div>
         <div className="flex items-start justify-start gap-[10px]">
-          <img
+          <Image
+            width={14}
+            height={14}
             src="/images/icons/plus.svg"
             alt="Добавить"
             className="w-[14px] h-[14px] cursor-pointer"
           />
-          <img
+          <Image
+            width={18}
+            height={18}
             src="/images/icons/download.svg"
             alt="Скачать"
             className="w-[18px] h-[18px] cursor-pointer"
@@ -87,7 +97,9 @@ const ModPack = ({ packId }) => {
       <div className="flex justify-between">
         <div>
           <div className="flex gap-[5px] items-center">
-            <img
+            <Image
+              width={18}
+              height={18}
               src="/images/icons/star.svg"
               alt=""
               className="w-[18px] h-[18px]"

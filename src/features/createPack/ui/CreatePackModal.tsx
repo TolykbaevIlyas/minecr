@@ -1,7 +1,12 @@
 "use client";
 import React, { useState } from "react";
 
-const CreatePackModal = ({ onClose, onCreate }) => {
+type CreatePackModalProps = {
+  onClose: () => void;
+  onCreate: (data: { name: string; description: string; imageUrl: string }) => void;
+};
+
+const CreatePackModal: React.FC<CreatePackModalProps> = ({ onClose, onCreate }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState<File | null>(null);
@@ -18,7 +23,7 @@ const CreatePackModal = ({ onClose, onCreate }) => {
         onCreate({
           name,
           description,
-          imageUrl: reader.result, // base64 картинка
+          imageUrl: reader.result as string
         });
         onClose();
       };

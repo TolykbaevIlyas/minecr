@@ -62,13 +62,19 @@ const Modpacs = () => {
       });
   }, [packs, view, search, typeFilter, genreFilter, sortOrder, getModsByPack]);
 
-  const handleCreatePack = (newPack) => {
+  type Create = {
+    name: string;
+    description: string;
+    imageUrl: string;
+  }
+
+  const handleCreatePack = (newPack: Create) => {
     addPack({
-      id: crypto.randomUUID(),
+      // id: crypto.randomUUID(),
       ...newPack,
-      mods: [],
+      // mods: [],
       isMine: true,
-      pageUrl: `/packs/${newPack.name.toLowerCase().replace(/\s+/g, "-")}`,
+      // pageUrl: `/packs/${newPack.name.toLowerCase().replace(/\s+/g, "-")}`,
       version: "1.0",
     });
   };
