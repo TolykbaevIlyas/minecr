@@ -23,7 +23,7 @@ const CreatePackModal: React.FC<CreatePackModalProps> = ({ onClose, onCreate }) 
         onCreate({
           name,
           description,
-          imageUrl: reader.result as string
+          imageUrl: reader.result as string,
         });
         onClose();
       };
@@ -42,30 +42,24 @@ const CreatePackModal: React.FC<CreatePackModalProps> = ({ onClose, onCreate }) 
           type="text"
           placeholder="Название"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={e => setName(e.target.value)}
           className="border p-2 rounded"
         />
 
         <textarea
           placeholder="Описание"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={e => setDescription(e.target.value)}
           className="border p-2 rounded"
         />
 
         <input type="file" accept="image/*" onChange={handleFileChange} />
 
-        <button
-          onClick={handleSubmit}
-          className="bg-accent text-white p-2 rounded mt-2"
-        >
+        <button onClick={handleSubmit} className="bg-accent text-white p-2 rounded mt-2">
           Создать
         </button>
 
-        <button
-          onClick={onClose}
-          className="text-red-600 text-sm underline mt-1"
-        >
+        <button onClick={onClose} className="text-red-600 text-sm underline mt-1">
           Отмена
         </button>
       </div>

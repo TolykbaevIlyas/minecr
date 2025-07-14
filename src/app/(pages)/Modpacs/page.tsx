@@ -5,9 +5,9 @@ import { useModsStore } from "@/shared/store/modsStore";
 import { CreatePackModal } from "@/features/createPack";
 
 const Modpacs = () => {
-  const packs = useModsStore((state) => state.packs);
-  const addPack = useModsStore((state) => state.addPack); // ✅ ensure this action exists
-  const getModsByPack = useModsStore((state) => state.getModsByPack);
+  const packs = useModsStore(state => state.packs);
+  const addPack = useModsStore(state => state.addPack); // ✅ ensure this action exists
+  const getModsByPack = useModsStore(state => state.getModsByPack);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [view, setView] = useState("All");
@@ -18,9 +18,9 @@ const Modpacs = () => {
 
   const types = useMemo(() => {
     const setTypes = new Set<string>();
-    packs.forEach((pack) => {
-      getModsByPack(pack.id).forEach((mod) => {
-        mod.type.forEach((t) => setTypes.add(t));
+    packs.forEach(pack => {
+      getModsByPack(pack.id).forEach(mod => {
+        mod.type.forEach(t => setTypes.add(t));
       });
     });
     return Array.from(setTypes);
@@ -28,9 +28,9 @@ const Modpacs = () => {
 
   const genres = useMemo(() => {
     const setGenres = new Set<string>();
-    packs.forEach((pack) => {
-      getModsByPack(pack.id).forEach((mod) => {
-        mod.genre.forEach((g) => setGenres.add(g));
+    packs.forEach(pack => {
+      getModsByPack(pack.id).forEach(mod => {
+        mod.genre.forEach(g => setGenres.add(g));
       });
     });
     return Array.from(setGenres);
@@ -38,23 +38,19 @@ const Modpacs = () => {
 
   const filtered = useMemo(() => {
     return packs
-      .filter((pack) => {
+      .filter(pack => {
         if (view === "My" && !pack.isMine) return false;
         if (view === "Uploaded" && pack.isMine) return false;
         return true;
       })
-      .filter((pack) => pack.name.toLowerCase().includes(search.toLowerCase()))
-      .filter((pack) => {
+      .filter(pack => pack.name.toLowerCase().includes(search.toLowerCase()))
+      .filter(pack => {
         if (!typeFilter) return true;
-        return getModsByPack(pack.id).some((mod) =>
-          mod.type.includes(typeFilter)
-        );
+        return getModsByPack(pack.id).some(mod => mod.type.includes(typeFilter));
       })
-      .filter((pack) => {
+      .filter(pack => {
         if (!genreFilter) return true;
-        return getModsByPack(pack.id).some((mod) =>
-          mod.genre.includes(genreFilter)
-        );
+        return getModsByPack(pack.id).some(mod => mod.genre.includes(genreFilter));
       })
       .sort((a, b) => {
         const cmp = a.name.localeCompare(b.name, "ru");
@@ -66,7 +62,7 @@ const Modpacs = () => {
     name: string;
     description: string;
     imageUrl: string;
-  }
+  };
 
   const handleCreatePack = (newPack: Create) => {
     addPack({
@@ -83,13 +79,11 @@ const Modpacs = () => {
     <div className="flex flex-col gap-[10px]">
       {/* Tabs */}
       <div className="flex gap-[10px]">
-        {["All", "My", "Uploaded"].map((v) => (
+        {["All", "My", "Uploaded"].map(v => (
           <button
             key={v}
             onClick={() => setView(v)}
-            className={`max-w-[120px] w-full h-[32px] rounded-[5px] ${
-              view === v ? "bg-accent" : ""
-            }`}
+            className={`max-w-[120px] w-full h-[32px] rounded-[5px] ${view === v ? "bg-accent" : ""}`}
           >
             {v === "All" ? "Все" : v === "My" ? "Мои" : "Загруженные"}
           </button>
@@ -101,23 +95,21 @@ const Modpacs = () => {
         <input
           placeholder="Поиск по названию"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={e => setSearch(e.target.value)}
           className="w-full focus:outline-none px-2 rounded-l-[5px] bg-inputfill border-border border-y-[3px] border-l-[3px]"
         />
-        <button className="max-w-[233px] w-full h-[32px] bg-accent rounded-r-[5px]">
-          Поиск
-        </button>
+        <button className="max-w-[233px] w-full h-[32px] bg-accent rounded-r-[5px]">Поиск</button>
       </div>
 
       {/* Фильтры */}
       <div className="flex gap-[10px]">
         <select
           value={typeFilter}
-          onChange={(e) => setTypeFilter(e.target.value)}
+          onChange={e => setTypeFilter(e.target.value)}
           className="bg-inputfill text-white py-[5px] px-[12px] rounded-[6px]"
         >
           <option value="">Тип</option>
-          {types.map((t) => (
+          {types.map(t => (
             <option key={t} value={t} className="text-black">
               {t}
             </option>
@@ -126,11 +118,11 @@ const Modpacs = () => {
 
         <select
           value={genreFilter}
-          onChange={(e) => setGenreFilter(e.target.value)}
+          onChange={e => setGenreFilter(e.target.value)}
           className="bg-inputfill text-white py-[5px] px-[12px] rounded-[6px]"
         >
           <option value="">Жанр</option>
-          {genres.map((g) => (
+          {genres.map(g => (
             <option key={g} value={g} className="text-black">
               {g}
             </option>
@@ -139,7 +131,7 @@ const Modpacs = () => {
 
         <select
           value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value)}
+          onChange={e => setSortOrder(e.target.value)}
           className="bg-inputfill text-white py-[5px] px-[12px] rounded-[6px]"
         >
           <option value="asc">А–Я</option>
@@ -156,17 +148,12 @@ const Modpacs = () => {
           Создать сборку
         </div>
 
-        {filtered.map((pack) => (
+        {filtered.map(pack => (
           <ModPack key={pack.id} packId={pack.id} />
         ))}
       </div>
 
-      {isModalOpen && (
-        <CreatePackModal
-          onClose={() => setIsModalOpen(false)}
-          onCreate={handleCreatePack}
-        />
-      )}
+      {isModalOpen && <CreatePackModal onClose={() => setIsModalOpen(false)} onCreate={handleCreatePack} />}
     </div>
   );
 };
